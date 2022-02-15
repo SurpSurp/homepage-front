@@ -31,7 +31,7 @@ const TimeItem: React.FC<ITimeItemProps> = ({ time, timeType }) => {
   return (
     <button
       className={handleTailwind(
-        "text-center pt-2 pb-1 transition-colors",
+        "text-center pt-2 pb-1 transition-colors delay-[30ms]",
         time == cachedTime
           ? timeType == TimeType.HighComplexity
             ? "text-[#EC645F] border border-[#EC645F] bg-white font-medium"

@@ -32,18 +32,10 @@ const HandlePage: React.FC<IHandlePageProps> = ({ prevRoute, nextRoute }) => {
   return (
     <div className="flex w-full justify-between mt-12">
       <Link href={`/appointment/${prevRoute}`}>
-        <a>
-          <button className="w-20 h-20">
-            <Image id="prev" src={PrevBtn} alt="prev-btn" layout="responsive" />
-          </button>
-        </a>
+        <a></a>
       </Link>
       <Link href={`/appointment/${nextRoute}`}>
-        <a>
-          <button className="w-20 h-20">
-            <Image id="next" src={NextBtn} alt="next-btn" layout="responsive" />
-          </button>
-        </a>
+        <a></a>
       </Link>
     </div>
   );

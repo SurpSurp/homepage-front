@@ -1,5 +1,6 @@
-import { useReactiveVar } from "@apollo/client";
 import { NextPage } from "next";
+import Image from "next/image";
+import { useReactiveVar } from "@apollo/client";
 import AppointmentBodyHeader from "../../components/appointment/body-header";
 import AppointmentMenu from "../../components/appointment/menu";
 import TreatmentItem from "../../components/appointment/treatment-item";
@@ -8,10 +9,20 @@ import { TreatmentType } from "../../src/graphql/__generated__/globalTypes";
 import ExtractionImg from "../../public/images/appointment/select-extraction.png";
 import DrImg from "../../public/images/appointment/select-dr.png";
 import SoImg from "../../public/images/appointment/select-so.png";
-import HandlePage from "../../components/appointment/handle-page";
+import NextBtn from "../../public/images/appointment/next-btn.png";
+import { useRouter } from "next/router";
 
 const SelectTreatment: NextPage = () => {
-  const cacheTreatment = useReactiveVar(treatmentTypeVar);
+  const router = useRouter();
+  const cachedTreatment = useReactiveVar(treatmentTypeVar);
+
+  const onClick = () => {
+    if (!cachedTreatment) {
+      alert("진료 과목을 선택해주세요.");
+      return;
+    }
+    router.push("/appointment/select-date");
+  };
 
   return (
     <div className="px-4 py-[5.5rem] w-full">
@@ -34,7 +45,11 @@ const SelectTreatment: NextPage = () => {
           <TreatmentItem img={DrImg} treatmentType={TreatmentType.Dr} />
           <TreatmentItem img={SoImg} treatmentType={TreatmentType.So} />
         </div>
-        <HandlePage nextRoute="select-date" />
+        <div className="flex w-full justify-end mt-12">
+          <button className="w-20 h-20 focus:outline-none" onClick={onClick}>
+            <Image id="next" src={NextBtn} alt="next-btn" layout="responsive" />
+          </button>
+        </div>
       </div>
     </div>
   );

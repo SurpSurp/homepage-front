@@ -146,6 +146,12 @@ export const handleLocalTime = (beforeChange: number): string => {
   return new Date(beforeChange - offset).toISOString().slice(0, 10);
 };
 
+export const addDays = (dateInput: Date, days: number) => {
+  var result = new Date(dateInput);
+  result.setDate(result.getDate() + days);
+  return result;
+};
+
 export const handleTailwind = (...classname: string[]) => {
   return classname.join(" ");
 };

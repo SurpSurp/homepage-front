@@ -4,7 +4,7 @@ import AppointmentBodyHeader from "../../components/appointment/body-header";
 import AppointmentBodySubHeader from "../../components/appointment/body-item-header";
 import Calender from "../../components/appointment/calender";
 import AppointmentMenu from "../../components/appointment/menu";
-import { treatmentTypeVar } from "../../libs/apolloClient";
+import { dateVar, timeVar, treatmentTypeVar } from "../../libs/apolloClient";
 import CalIcon from "../../public/images/appointment/cal-icon.png";
 import TimeIcon from "../../public/images/appointment/time-icon.png";
 import DateTimeNoti from "../../public/images/appointment/select-dateTime-notification.jpeg";
@@ -19,26 +19,50 @@ import {
   GET_N_EXTRACTION_TABLE,
 } from "../../src/graphql/query";
 import TimeItem from "../../components/appointment/time-item";
-import { handleLocalTime } from "../../libs/util";
+import { addDays, handleLocalTime } from "../../libs/util";
 import {
   getNotExtractionTimeTable,
   getNotExtractionTimeTableVariables,
 } from "../../src/graphql/__generated__/getNotExtractionTimeTable";
 import { TreatmentType } from "../../src/graphql/__generated__/globalTypes";
-import HandlePage from "../../components/appointment/handle-page";
+import PrevBtn from "../../public/images/appointment/prev-btn.png";
+import NextBtn from "../../public/images/appointment/next-btn.png";
+import { useRouter } from "next/router";
 
 const SelectDate = () => {
+  const router = useRouter();
   const cachedTreatment = useReactiveVar(treatmentTypeVar);
-
-  const addDays = (dateInput: Date, days: number) => {
-    var result = new Date(dateInput);
-    result.setDate(result.getDate() + days);
-    return result;
-  };
+  const cachedDate = useReactiveVar(dateVar);
+  const cachedTime = useReactiveVar(timeVar);
 
   const [date, setDate] = useState<Date>(
     new Date().getDay() === 0 ? addDays(new Date(), 1) : new Date()
   );
+
+  const onClick = (event: any) => {
+    const {
+      target: { id },
+    } = event;
+
+    if (id == "prev") {
+      alert("진료 날짜와 시간을 선택하신 경우 초기화됩니다.");
+      dateVar("");
+      timeVar(null);
+      router.push("/appointment/select-treatment");
+      return;
+    }
+
+    if (!cachedDate) {
+      alert("진료 날짜를 선택해주세요.");
+      return;
+    }
+    if (!cachedTime) {
+      alert("진료 시간을 선택해주세요.");
+      return;
+    }
+
+    router.push("/appointment/patient-info");
+  };
 
   const [tableResult, SetTableResult] = useState<
     getExtractionTimeTable_getExtractionTimeTable_result[] | null
@@ -104,6 +128,7 @@ const SelectDate = () => {
         },
       });
     }
+    dateVar(handleLocalTime(date.getTime()));
   }, [cachedTreatment, date, getExtractionTable, getNExtractionTable]);
 
   return (
@@ -173,7 +198,14 @@ const SelectDate = () => {
             layout="responsive"
           />
         </div>
-        <HandlePage prevRoute="select-treatment" nextRoute="select-treatment" />
+        <div className="flex w-full justify-between mt-12">
+          <button className="w-20 h-20" onClick={onClick}>
+            <Image id="prev" src={PrevBtn} alt="prev-btn" layout="responsive" />
+          </button>
+          <button className="w-20 h-20" onClick={onClick}>
+            <Image id="next" src={NextBtn} alt="next-btn" layout="responsive" />
+          </button>
+        </div>
       </div>
     </div>
   );

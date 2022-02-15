@@ -44,7 +44,7 @@ const AppointmentMenu: React.FC<IReservationMenuProps> = ({
         />
         <AppointmentMenuItem
           id={3}
-          text={"본인인증 및 예약"}
+          text={"예약자 정보"}
           isDisplayed={currentSession === 2}
         />
         <AppointmentMenuItem

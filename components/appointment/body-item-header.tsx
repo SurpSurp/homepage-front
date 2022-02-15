@@ -10,7 +10,7 @@ const AppointmentBodySubHeader: React.FC<IAppointmentBodySubHeaderProps> = ({
   icon,
 }) => {
   return (
-    <div className="flex border-b border-gray-300 pb-3.5 text-[1.5rem] font-medium text-opacity-95  text-[#767676]">
+    <div className="flex w-full border-b border-gray-300 pb-3.5 text-[1.5rem] font-medium text-opacity-95  text-[#767676]">
       {icon && (
         <div className="w-7 h-7 mr-2">
           <Image src={icon} alt="icon" layout="responsive" />
