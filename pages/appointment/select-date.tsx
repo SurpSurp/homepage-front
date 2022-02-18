@@ -1,5 +1,5 @@
 import { useLazyQuery, useReactiveVar } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AppointmentBodyHeader from "../../components/appointment/body-header";
 import AppointmentBodySubHeader from "../../components/appointment/body-item-header";
 import Calender from "../../components/appointment/calender";
@@ -35,8 +35,18 @@ const SelectDate = () => {
   const cachedDate = useReactiveVar(dateVar);
   const cachedTime = useReactiveVar(timeVar);
 
+  const firstRef = useRef<HTMLDivElement>(null);
+  const secondRef = useRef<HTMLDivElement>(null);
+  const thirdRef = useRef<HTMLDivElement>(null);
+
+  const [canScroll, setCanScroll] = useState(false);
+
   const [date, setDate] = useState<Date>(
-    new Date().getDay() === 0 ? addDays(new Date(), 1) : new Date()
+    cachedDate
+      ? new Date(cachedDate)
+      : new Date().getDay() === 0
+      ? addDays(new Date(), 1)
+      : new Date()
   );
 
   const onClick = (event: any) => {
@@ -48,7 +58,7 @@ const SelectDate = () => {
       alert("진료 날짜와 시간을 선택하신 경우 초기화됩니다.");
       dateVar("");
       timeVar(null);
-      router.push("/appointment/select-treatment");
+      router.replace("/appointment/select-treatment");
       return;
     }
 
@@ -61,39 +71,31 @@ const SelectDate = () => {
       return;
     }
 
-    router.push("/appointment/patient-info");
+    router.replace("/appointment/patient-info");
   };
 
   const [tableResult, SetTableResult] = useState<
     getExtractionTimeTable_getExtractionTimeTable_result[] | null
   >(null);
 
-  console.log(Boolean(tableResult));
-
   const EComplete = (data: getExtractionTimeTable) => {
-    console.log("called");
-
     const {
       getExtractionTimeTable: { ok, result },
     } = data;
 
     if (ok) {
+      SetTableResult(result);
     }
-    console.log(result);
-    SetTableResult(result);
   };
 
   const NeComplete = (data: getNotExtractionTimeTable) => {
-    console.log("called");
-
     const {
       getNotExtractionTimeTable: { ok, result },
     } = data;
 
     if (ok) {
+      SetTableResult(result);
     }
-
-    SetTableResult(result);
   };
 
   const [getExtractionTable, { loading: ELoading }] = useLazyQuery<
@@ -131,6 +133,40 @@ const SelectDate = () => {
     dateVar(handleLocalTime(date.getTime()));
   }, [cachedTreatment, date, getExtractionTable, getNExtractionTable]);
 
+  useEffect(() => {
+    if (!cachedTreatment) {
+      router.replace("/appointment/select-treatment");
+    }
+  }, []);
+
+  useEffect(() => {
+    firstRef.current?.scrollIntoView({
+      block: "end",
+      behavior: "smooth",
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!canScroll) {
+      setCanScroll(true);
+      return;
+    }
+
+    secondRef.current?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+  }, [date]);
+
+  useEffect(() => {
+    if (!cachedTime) return;
+
+    thirdRef.current?.scrollIntoView({
+      block: "end",
+      behavior: "smooth",
+    });
+  }, [cachedTime]);
+
   return (
     <div className="px-4 py-[5.5rem] w-full">
       <AppointmentMenu currentSession={1} />
@@ -156,9 +192,14 @@ const SelectDate = () => {
           </div>
         </div>
 
-        <div className="bg-white px-7 py-7 mt-4 h-[471px] flex flex-col justify-between">
+        <div
+          className="bg-white px-7 py-7 mt-4 h-[471px] flex flex-col justify-between"
+          ref={secondRef}
+        >
           <div>
+            <div />
             <AppointmentBodySubHeader text="시간 선택" icon={TimeIcon} />
+            <div ref={firstRef} />
             <div className="w-full grid grid-cols-3 pt-5 gap-3">
               {tableResult &&
                 tableResult.map((timeunit, idx) => (
@@ -191,14 +232,14 @@ const SelectDate = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white mt-4 h-[471px]">
+        <div className="bg-white mt-4 ">
           <Image
             src={DateTimeNoti}
             alt="date-time-notification"
             layout="responsive"
           />
         </div>
-        <div className="flex w-full justify-between mt-12">
+        <div className="flex w-full justify-between mt-12" ref={thirdRef}>
           <button className="w-20 h-20" onClick={onClick}>
             <Image id="prev" src={PrevBtn} alt="prev-btn" layout="responsive" />
           </button>

@@ -18,8 +18,6 @@ const TimeItem: React.FC<ITimeItemProps> = ({ time, timeType }) => {
     timeVar(time);
   };
 
-  console.log(cachedTime == time);
-
   if (timeType == TimeType.Unbookable) {
     return (
       <button className="border-opacity-60 text-center text-white font-light bg-[#969696] pt-2 pb-1 pointer-events-none">

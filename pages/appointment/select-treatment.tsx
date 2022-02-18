@@ -11,23 +11,33 @@ import DrImg from "../../public/images/appointment/select-dr.png";
 import SoImg from "../../public/images/appointment/select-so.png";
 import NextBtn from "../../public/images/appointment/next-btn.png";
 import { useRouter } from "next/router";
+import { useEffect, useRef } from "react";
 
 const SelectTreatment: NextPage = () => {
   const router = useRouter();
   const cachedTreatment = useReactiveVar(treatmentTypeVar);
+
+  const firstRef = useRef<HTMLDivElement>(null);
 
   const onClick = () => {
     if (!cachedTreatment) {
       alert("진료 과목을 선택해주세요.");
       return;
     }
-    router.push("/appointment/select-date");
+    router.replace("/appointment/select-date");
   };
+
+  useEffect(() => {
+    firstRef.current?.scrollIntoView({
+      block: "end",
+      behavior: "smooth",
+    });
+  }, []);
 
   return (
     <div className="px-4 py-[5.5rem] w-full">
       <AppointmentMenu currentSession={0} />
-      <div className="bg-[#F2F2F2] px-7 py-7">
+      <div className="bg-[#F2F2F2] px-7 py-7" ref={firstRef}>
         <div className="flex w-full justify-between">
           <AppointmentBodyHeader
             text="진료 과목 선택"

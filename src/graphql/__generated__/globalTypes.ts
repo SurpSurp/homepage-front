@@ -7,6 +7,12 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum Cancel {
+  Cancal = "Cancal",
+  Change = "Change",
+  Default = "Default",
+}
+
 export enum TimeType {
   Bookable = "Bookable",
   HighComplexity = "HighComplexity",
@@ -40,6 +46,16 @@ export enum TreatmentType {
   Dr = "Dr",
   Extraction = "Extraction",
   So = "So",
+}
+
+export interface ApplyReservationInput {
+  pnt_name: string;
+  hp_no: string;
+  date: string;
+  time: TimeUnit;
+  treatmentType: TreatmentType;
+  cancel: Cancel;
+  requestedTerm?: string | null;
 }
 
 export interface GetReservationInput {

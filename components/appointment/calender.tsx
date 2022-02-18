@@ -1,4 +1,5 @@
 import DayPicker, { DayModifiers } from "react-day-picker";
+import { timeVar } from "../../libs/apolloClient";
 
 interface ICalenderProps {
   date: Date;
@@ -31,7 +32,7 @@ const Calender: React.FC<ICalenderProps> = ({ date, setDate }) => {
 
   const handleDayClick = (day: Date, { disabled }: DayModifiers) => {
     if (disabled) return;
-
+    timeVar(null);
     setDate(day);
   };
 

@@ -31,7 +31,7 @@ const AppointmentMenu: React.FC<IReservationMenuProps> = ({
         </span>
       </div>
       <hr className="mt-6 opacity-80" />
-      <div className="mt-5 space-y-0.5">
+      <div className="mt-5 space-y-1">
         <AppointmentMenuItem
           id={1}
           text={"진료 과목"}
